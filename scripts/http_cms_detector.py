@@ -77,19 +77,19 @@ def run(target, port, args=None):
         if score > 0:
             score = min(score, 100)
             print(f"[+] CMS Detected: {cms} ({score}% confidence)")
-        #finding version
-        if cms.lower() == "wordpress":
-            print("[*] Finding WordPress version using feed")
-            url = base + "/feed"
-            try:
-                response = requests.get(url, stream=True)
-                response.raise_for_status()
-                file_content = response.text
-                soup = BeautifulSoup(file_content, "html5lib")
-                wordpressuri = soup.find("generator").text
-                uris = wordpressuri.split("=")
-                uris.remove("https://wordpress.org/?v=")
-                version = uris[0]
-                print(f"\n Version found: Wordpress {version}")
-            except:
-                print("[!] Could not find WP version.")
+            #finding version
+            if cms.lower() == "wordpress":
+                print("[*] Finding WordPress version using feed")
+                url = base + "/feed"
+                try:
+                    response = requests.get(url, stream=True)
+                    response.raise_for_status()
+                    file_content = response.text
+                    soup = BeautifulSoup(file_content, "html5lib")
+                    wordpressuri = soup.find("generator").text
+                    uris = wordpressuri.split("=")
+                    uris.remove("https://wordpress.org/?v=")
+                    version = uris[0]
+                    print(f"\n Version found: Wordpress {version}")
+                except:
+                    print("[!] Could not find WP version.")
