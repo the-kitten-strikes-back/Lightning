@@ -2,6 +2,7 @@ import socket
 
 SERVICE = "redis"
 DESCRIPTION = "Redis unauth access & INFO dump"
+SCRIPT_NAME = "redis-info-dump"
 
 def run(target, port, args=None):
     try:

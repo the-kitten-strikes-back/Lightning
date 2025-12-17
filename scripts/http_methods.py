@@ -2,6 +2,7 @@ import socket
 
 SERVICE = "http"
 DESCRIPTION = "Check enabled HTTP methods"
+SCRIPT_NAME = "http-methods"
 
 def run(target, port, args):
     print("[*] HTTP methods enumeration")

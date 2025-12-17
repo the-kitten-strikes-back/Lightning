@@ -2,6 +2,8 @@ import socket
 
 SERVICE = "ftp"
 DESCRIPTION = "Check FTP response behavior for user enumeration"
+SCRIPT_NAME = "ftp-bruteforce-check"
+
 
 def run(target, port, args):
     print("[*] FTP user enumeration check")

@@ -4,6 +4,7 @@ import urllib.parse
 SERVICE = "http"
 DESCRIPTION = "Detects basic web vulns: reflected XSS, open redirect, SSRF hints, dangerous methods"
 OPTIONAL = True
+SCRIPT_NAME = "http-vuln"
 
 SAFE_MARKER = "LIGHTNING_TEST"
 

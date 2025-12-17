@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 SERVICE = "http"
 DESCRIPTION = "CMS detection via headers, paths, and HTML fingerprinting"
+SCRIPT_NAME = "http-cms-detector"
 
 CMS_SIGNATURES = {
     "WordPress": {
@@ -27,8 +28,15 @@ CMS_SIGNATURES = {
     "GitLab": {
         "paths": ["/users/sign_in"],
         "html": ["gitlab"]
+    },
+    "OpenEMR": {
+        "paths": ["/interface/login/login.php", "/setup.php", "/openemr-5_0_1_3"],
+        "html": ["OpenEMR", "openemr"],
+        "robots": ["interface"],
+        "headers": ["OpenEMR"]
     }
 }
+
 
 def run(target, port, args=None):
     base = f"http://{target}:{port}"

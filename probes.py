@@ -1,5 +1,6 @@
+import socket
 def http_probe(target, port):
-    import socket
+
     try:
         s = socket.socket()
         s.settimeout(2)
@@ -12,7 +13,6 @@ def http_probe(target, port):
     except:
         return ""
 def grab_banner(target, port):
-    import socket
     try:
         s = socket.socket()
         s.settimeout(2)
@@ -22,3 +22,30 @@ def grab_banner(target, port):
         return banner
     except:
         return ""
+def smb_probe(target, port=445):
+    try:
+        from impacket.smbconnection import SMBConnection
+
+        # '*' = negotiate best dialect automatically
+        conn = SMBConnection(
+            remoteName=target,
+            remoteHost=target,
+            sess_port=port,
+            timeout=3
+        )
+
+        conn.login('', '')  # anonymous login attempt
+
+        info = {
+            "server_os": conn.getServerOS(),
+            "server_name": conn.getServerName(),
+            "domain": conn.getServerDomain(),
+            "signing": conn.isSigningRequired(),
+            "dialect": conn.getDialect()
+        }
+
+        conn.close()
+        return info
+
+    except Exception:
+        return None

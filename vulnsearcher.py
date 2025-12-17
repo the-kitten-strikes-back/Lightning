@@ -23,7 +23,7 @@ def extract_cves_from_exploitdb(urls):
     for url in urls:
         try:
             r = requests.get(url, timeout=10)
-            soup = BeautifulSoup(r.text, "html.parser")
+            soup = BeautifulSoup(r.text, "html5lib")
 
             meta = soup.find("meta", attrs={"name": "keywords"})
             if not meta or "content" not in meta.attrs:

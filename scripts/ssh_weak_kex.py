@@ -2,6 +2,7 @@ import socket
 
 SERVICE = "ssh"
 DESCRIPTION = "Check for weak SSH key exchange algorithms"
+SCRIPT_NAME = "ssh-weak-kex"
 
 WEAK_KEX = [
     "diffie-hellman-group1-sha1",

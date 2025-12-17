@@ -2,6 +2,7 @@ import socket
 
 SERVICE = "http"
 DESCRIPTION = "Check common HTTP security headers"
+SCRIPT_NAME = "http-headers"
 
 SECURITY_HEADERS = [
     "X-Frame-Options",

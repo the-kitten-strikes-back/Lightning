@@ -3,6 +3,7 @@ import requests
 SERVICE = "http"
 DESCRIPTION = "Detects possible SQL injection via error-based responses"
 OPTIONAL = True
+SCRIPT_NAME = "http-sqli"
 
 SQL_ERRORS = {
     "MySQL": [

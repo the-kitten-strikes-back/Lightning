@@ -2,7 +2,7 @@ import socket
 
 SERVICE = "http"
 DESCRIPTION = "Check common admin paths"
-
+SCRIPT_NAME = "http-admin-paths"
 PATHS = [
     "/admin",
     "/administrator",

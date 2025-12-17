@@ -16,8 +16,6 @@ console = Console()
 
 import random
 import time
-from rich.console import Console
-from rich.panel import Panel
 from rich.live import Live
 
 console = Console()
@@ -106,8 +104,25 @@ parser.add_argument(
     help="Enable service detection"
 )
 
+parser.add_argument(
+    "--active",
+    action="store_true",
+    help="Enable active / optional scripts"
+)
+
+parser.add_argument(
+    "--scripts",
+    help="Comma-separated list of scripts to run (overrides defaults)"
+)
+
 
 args = parser.parse_args()
+
+selected_scripts = None
+if args.scripts:
+    selected_scripts = set(s.strip() for s in args.scripts.split(","))
+
+
 try:
     start_port, end_port = map(int, args.ports.split("-"))
     if not (1 <= start_port <= end_port <= 65535):
@@ -132,7 +147,8 @@ def prompt_nvd_key():
     console.print("[green][*] NVD key required for vulndetails search. If you do not need this feature, please skip.")
     return getpass.getpass("Enter NVD-API key (input hidden): ")
 
-
+serpapikey = prompt_serpapi_key()
+nvdkey = prompt_nvd_key()
 def syn_scan_parallel(target, ports):
     open_ports = []
     packets = []
@@ -209,18 +225,19 @@ if __name__ == "__main__":
                             service=svc["service"],
                             target=target,
                             port=svc["port"],
-                            args={}
+                            args={"active": args.active,
+                                  "scripts": selected_scripts
+                                  }
                         )
             if services:
                 x = input("Service scan complete. Do you want to check for vulnerabilities? (y/n): ")
                 if x.lower() == "y":
                     z = input("OSINT search or database search? (osint/database)")
                     if z.lower() == "database":
-                        nvdkey = prompt_nvd_key()
                         for svc in services:
                             if svc.get("version"):
                                 vulns = vulnscanner.nvd_search(
-                                    svc["service"],
+                                    svc["product"],
                                     svc["version"],
                                     nvdapikey=nvdkey
                                 )
@@ -230,17 +247,16 @@ if __name__ == "__main__":
                     elif z.lower() == "osint":
                         for svc in services:
                             if svc.get("version"):
-                                serpapikey = prompt_serpapi_key()
-                                nvdkey = prompt_nvd_key()
-                                cves, descs = vulnsearcher.vulnsearch(svc["service"], svc["version"], apikey=serpapikey, nvdapikey=nvdkey)
-                                table = Table(title=f"Vulnerabilities for {svc['service']} {svc['version']}")
+
+                                cves, descs = vulnsearcher.vulnsearch(svc["product"], svc["version"], apikey=serpapikey, nvdapikey=nvdkey)
+                                table = Table(title=f"Vulnerabilities for {svc['product']} {svc['version']}")
                                 table.add_column("CVE", style="red")
                                 table.add_column("Description", style="yellow")
 
                                 for i in range(len(cves)):
                                     table.add_row(cves[i], descs[i])
                                 
-                            console.print(table)
+                                console.print(table)
                             
 
         else:

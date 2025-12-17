@@ -2,6 +2,7 @@ import socket
 
 SERVICE = "http"
 DESCRIPTION = "Check for robots.txt"
+SCRIPT_NAME = "http-robots"
 
 def run(target, port, args):
     print("[*] robots.txt check")

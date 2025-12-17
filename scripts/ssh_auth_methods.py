@@ -2,6 +2,7 @@ import socket
 
 SERVICE = "ssh"
 DESCRIPTION = "Enumerate SSH authentication methods"
+SCRIPT_NAME = "ssh-auth-methods"
 
 def run(target, port, args):
     print("[*] SSH authentication methods check")

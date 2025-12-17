@@ -3,6 +3,7 @@ import psycopg2
 SERVICE = "postgres"
 DESCRIPTION = "PostgreSQL trust / no-auth access check"
 OPTIONAL = True
+SCRIPT_NAME = "postgresql-trust"
 
 def run(target, port, args=None):
     try:

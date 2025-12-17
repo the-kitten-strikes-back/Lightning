@@ -2,6 +2,8 @@ import socket
 
 SERVICE = "ftp"
 DESCRIPTION = "Check for anonymous FTP login"
+SCRIPT_NAME = "ftp-anon"
+
 
 def run(target, port, args):
     print("[*] FTP anonymous login check")
