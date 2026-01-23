@@ -1,3 +1,5 @@
+import psutil
+import os
 from scapy.all import IP, TCP, sr, send
 import sys
 from tqdm import tqdm
@@ -13,12 +15,22 @@ from rich.panel import Panel
 from rich.table import Table
 
 console = Console()
-
+process = psutil.Process(os.getpid())
 import random
 import time
 from rich.live import Live
 
-console = Console()
+def get_memory_usage():
+    """
+    Returns the current memory usage of the Python process in MiB (megabytes).
+    """
+    process = psutil.Process(os.getpid())
+    # memory_info().rss gives the Resident Set Size (physical memory used) in bytes.
+    # We convert it to megabytes for readability.
+    mem_bytes = process.memory_info().rss
+    mem_mib = mem_bytes / (1024 ** 2)
+    return mem_mib
+
 
 LOGO = r"""
 ██╗     ██╗ ██████╗ ██╗  ██╗████████╗███╗   ██╗██╗███╗   ██╗ ██████╗
@@ -172,7 +184,7 @@ def syn_scan_parallel(target, ports, batch_size=256):
     # materialize ports to allow slicing without building packet objects
     ports_list = list(ports)
     total = len(ports_list)
-
+    print(f"Initial memory usage: {get_memory_usage():.2f} MiB")
     with tqdm(total=total) as pbar:
         for i in range(0, total, batch_size):
             batch = ports_list[i:i + batch_size]
@@ -193,7 +205,7 @@ def syn_scan_parallel(target, ports, batch_size=256):
 
                     # polite RST
                     send(IP(dst=target)/TCP(dport=port, flags="R"), verbose=0)
-
+            
             pbar.update(len(batch))
 
     # Print results table once
