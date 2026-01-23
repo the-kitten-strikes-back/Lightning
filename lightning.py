@@ -115,6 +115,13 @@ parser.add_argument(
     help="Comma-separated list of scripts to run (overrides defaults)"
 )
 
+parser.add_argument(
+    "--batch-size",
+    type=int,
+    default=256,
+    help="Batch size for packet sends to reduce RAM (default: 256)"
+)
+
 
 args = parser.parse_args()
 
@@ -149,38 +156,56 @@ def prompt_nvd_key():
 
 serpapikey = prompt_serpapi_key()
 nvdkey = prompt_nvd_key()
-def syn_scan_parallel(target, ports):
+def syn_scan_parallel(target, ports, batch_size=256):
+    """Perform SYN scan in batches to reduce memory usage.
+
+    Args:
+        target: target IP/hostname
+        ports: iterable of port numbers
+        batch_size: number of packets to send per batch
+
+    Returns:
+        list of open ports
+    """
     open_ports = []
-    packets = []
 
-    for port in tqdm(ports):
-        packets.append(IP(dst=target)/TCP(dport=port, flags="S"))
+    # materialize ports to allow slicing without building packet objects
+    ports_list = list(ports)
+    total = len(ports_list)
 
-    answered, _ = sr(
-        packets,
-        timeout=1,
-        inter=0.002,
-        retry=1,
-        verbose=0
-    )
+    with tqdm(total=total) as pbar:
+        for i in range(0, total, batch_size):
+            batch = ports_list[i:i + batch_size]
+            packets = [IP(dst=target) / TCP(dport=port, flags="S") for port in batch]
 
-    for sent, received in answered:
-        if received.haslayer(TCP) and received[TCP].flags == 0x12:
-            port = sent[TCP].dport
-            open_ports.append(port)
+            answered, _ = sr(
+                packets,
+                timeout=1,
+                inter=0.002,
+                retry=1,
+                verbose=0
+            )
 
-            # polite RST
-            send(IP(dst=target)/TCP(dport=port, flags="R"), verbose=0)
+            for sent, received in answered:
+                if received.haslayer(TCP) and received[TCP].flags == 0x12:
+                    port = sent[TCP].dport
+                    open_ports.append(port)
 
-    for port in open_ports:
+                    # polite RST
+                    send(IP(dst=target)/TCP(dport=port, flags="R"), verbose=0)
+
+            pbar.update(len(batch))
+
+    # Print results table once
+    if open_ports:
         table = Table(title=f"Open Ports on {target}")
         table.add_column("Port", justify="center", style="bright_green")
         table.add_column("Status", justify="center", style="green")
 
-        for port in open_ports:
+        for port in sorted(open_ports):
             table.add_row(str(port), "OPEN")
 
-    console.print(table)
+        console.print(table)
 
     return open_ports
 
@@ -191,7 +216,7 @@ if __name__ == "__main__":
     console.print(f"[bright_cyan][+] Scanning ports {start_port}-{end_port}")
     console.print(f"[green]-" * 40)
 
-    open_ports = syn_scan_parallel(target, ports)
+    open_ports = syn_scan_parallel(target, ports, batch_size=args.batch_size)
 
     if os_enabled:
         if open_ports:

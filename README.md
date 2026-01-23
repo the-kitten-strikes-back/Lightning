@@ -1,7 +1,7 @@
 ⚡ Lightning
 ===========
 
-**Lightning** is a fast, modular, open-source, **SYN-based network scanner** with OS detection, service fingerprinting, scriptable enumeration, and OSINT-powered vulnerability discovery — built **COMPLETELY IN PYTHON** for learning, CTFs, and **real-world reconnaissance**.
+**Lightning** is a fast, modular, open-source, **SYN-based network scanner and exploiter** with OS detection, service fingerprinting, scriptable enumeration, and OSINT-powered vulnerability discovery — built **COMPLETELY IN PYTHON** for learning, CTFs, and **real-world reconnaissance**.
 
 
 🤝 Contributing
