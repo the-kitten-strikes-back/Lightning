@@ -1,7 +1,7 @@
 ⚡ Lightning
 ===========
 
-**Lightning** is a fast, modular, open-source, **SYN-based network scanner** with OS detection, service fingerprinting, scriptable enumeration, and OSINT-powered vulnerability discovery — built **COMPLETELY IN PYTHON** for learning, CTFs, and **real-world reconnaissance**.
+**Lightning** is a fast, modular, open-source, **SYN-based network scanner and exploiter** with OS detection, service fingerprinting, scriptable enumeration, and OSINT-powered vulnerability discovery — built **COMPLETELY IN PYTHON** for learning, CTFs, and **real-world reconnaissance**.
 
 
 🤝 Contributing
@@ -97,8 +97,11 @@ Lightning/
 │   ├── ftp_*.py
 │   ├── http_*.py
 │   └── ssh_*.py
+├── exploits/              # Exploits by CVE(still in progress...)
+│  ├── cve-2021-27365.py
 ├── servicedetector.py     # Service fingerprinting
 ├── osdetector.py          # OS detection logic
+├── exploit_engine.py
 ├── vulnscanner.py         # NVD database search
 ├── vulnsearcher.py        # OSINT vulnerability search
 ├── service_db.py          # Probe & signature DB
