@@ -1,14 +1,20 @@
 ⚡ Lightning
 ===========
 
-**Lightning** is a fast, modular, open-source, **SYN-based network scanner and exploiter** with OS detection, service fingerprinting, scriptable enumeration, and OSINT-powered vulnerability discovery — built **COMPLETELY IN PYTHON** for learning, CTFs, and **real-world reconnaissance**.
+
+**You might think Python is slow.**
+
+**THINK AGAIN.**
+
+
+**Lightning** is a fast, modular, open-source, **SYN-based network scanner and exploiter** with OS detection, service fingerprinting, scriptable enumeration, and OSINT-powered vulnerability discovery — built **COMPLETELY IN PYTHON (SLOW? NOT ANYMORE)** for learning, CTFs, and **real-world reconnaissance**.
 
 
 🤝 Contributing
 ---------------
 
 
-This project is built for learning and is left open source. It would _really_ help me if you could contribute in any way you want. 
+This project is left open source. It would *really* help me if you could contribute in any way you want. 
 
 If you want to contribute:
 
